@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "network": {
+      "commandName": "Project",
+      "workingDirectory": "$(SolutionDir)"
+    }
+  }
+}

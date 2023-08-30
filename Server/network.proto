@@ -1,0 +1,153 @@
+syntax = "proto3";
+
+option csharp_namespace = "network";
+
+// Packets
+message Packet {
+	uint64 id = 1;
+	oneof Message {
+		Login login = 100;
+		LoginResult login_result = 101;
+		Ping ping = 102;
+		Disconnected disconnected = 103;
+		WelcomeField welcome_field = 104;
+		UnitJoined unit_joined = 105;
+		UnitLeft unit_left = 106;
+		UnitMove unit_move = 107;
+		UnitUpdated unit_updated = 108;
+		ChatMessage chat_message = 109;
+		RoomJoin room_join = 110;
+		RoomJoinResult room_join_result = 111;
+		RoomLeave room_leave = 112;
+	}
+}
+
+// Enums
+enum StatusCode {
+	STATUS_CODE_NONE = 0;
+	STATUS_CODE_SUCCESS = 1;
+	STATUS_CODE_FAILED = 10000;
+}
+
+enum RoomMode {
+	ROOM_MODE_NONE = 0;
+	ROOM_MODE_SQURE = 1;
+	ROOM_MODE_O_X_QUIZ = 2;
+	ROOM_MODE_MUSEUM = 10000;
+}
+
+// Data
+message NetworkUnit
+{
+	int64 id = 1;
+	string name = 2;
+	string character_information_json = 3;
+	NetworkVector3 position = 4;
+	NetworkVector3 direction = 5;
+	string hash_id = 6;
+	string nft_item_char = 7;
+	string nft_item_gear = 8;
+	bool is_gm = 9;
+}
+
+message NetworkRoom
+{
+	int64 id = 1;
+	RoomMode room_mode = 2;
+}
+
+message NetworkField
+{
+	int64 id = 1;
+}
+
+message NetworkVector3
+{
+	float x = 1;
+	float y = 2;
+	float z = 3;
+}
+
+// Messages
+message Login
+{    
+    string jwt_token = 1;
+	string email = 2;
+	string password = 3;
+}
+
+message LoginResult
+{
+	int32 status = 1;
+	string hashId = 2;
+	string meta_pixel_name = 3;
+	string name = 4;
+	string nft_item_list_json = 5;
+	int64 pixel_balance_amount = 6;
+    NetworkUnit networkUnit = 7;
+}
+
+message Ping{
+	double time = 1;
+}
+
+message Disconnected
+{
+}
+
+message WelcomeField
+{
+	repeated NetworkUnit network_units = 1;
+	NetworkUnit my_unit = 2;
+}
+
+message UnitJoined
+{
+	NetworkUnit networkUnit = 2;
+}
+
+message UnitLeft
+{
+	int64 unit_id = 3;
+}
+
+message UnitMove
+{
+	int64 unit_id = 1;
+	double time = 2;
+	NetworkVector3 position = 3;
+	NetworkVector3 direction = 4;
+	float velocity_x_z = 5;
+	float velocity_y = 6;
+	bool fixed_position = 7;
+}
+
+message UnitUpdated
+{
+	NetworkUnit network_unit = 1;
+	bool fixed_position = 2;
+}
+
+message ChatMessage
+{
+	int64 unit_id = 1;
+	string name = 2;
+	string content = 3;
+	bool announce = 4;
+}
+
+message RoomJoin
+{
+	int64 room_id = 1;
+	int32 map_id = 2;
+}
+
+message RoomJoinResult
+{
+	StatusCode status_code = 1;
+	NetworkRoom room = 2;
+}
+
+message RoomLeave
+{
+}
